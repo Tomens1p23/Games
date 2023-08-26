@@ -1,0 +1,25 @@
+status_label.config(text="Game Tie")
+elif player_option == 3:
+status_label.config(text="Player Win")
+
+
+def ScissorCom():
+if player_option == 1:
+status_label.config(text="Player Win")
+elif player_optiostatus_label.config(text="Game Tie")
+elif player_option == 3:
+status_label.config(text="Player Win")
+
+
+def ScissorCom():
+if player_option == 1:
+status_label.config(text="Player Win")
+elif player_optiostatus_label.config(text="Game Tie")
+elif player_option == 3:
+status_label.config(text="Player Win")
+
+
+def ScissorCom():
+if player_option == 1:
+status_label.config(text="Player Win")
+elif player_optio
