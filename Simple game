@@ -1,0 +1,17 @@
+třída Cactus(pygame.sprite.Sprite): Kaktus ( pygame . sprite . Sprite ):
+def __init__(vlastní, rychlost=5, sx=-1, sy=-1):def __init__ ( self , rychlost = 5 , sx =- 1 , sy =- 1 ):
+pygame.sprite.Sprite.__init__(self,self.containers). skřítek . Sprite . __init__ ( vlastní , vlastní kontejnery ) _
+self.imgs, self.rect = load_sprite_sheet('cactus-small.png', 3, 1, sx, sy, -1)sebe . imgs , self . rect = load_sprite_sheet ( 'cactus-small.png' , 3 , 1 , sx , sy , - 1 )    
+self.rect.bottom = int(0,98 * výška_obrazovky)sebe . rect . bottom = int ( 0,98 * height_screen )  
+self.rect.left = width_screen + self.rect.widthsebe . rect . left = width_screen + self . rect . šířka 
+self.image = self.imgs[random.randrange(0, 3)]sebe . obraz = sebe . imgs [ náhodné . randrange ( 0 , 3 )]  
+vlastní pohyb = [-1*rychlost,0]sebe . pohyb = [- 1 * rychlost , 0 ] 
+
+def draw(self):def draw ( self ):
+screen_layout_display.blit(self.image, self.rect). blit ( self . image , self . rect ) 
+
+def update(self):def update ( self ):
+self.rect = self.rect.move(self.movement)sebe . rect = sebe . rect . pohybovat se ( sebe . pohyb ) 
+
+pokud self.rect.right < 0:pokud sám . rect . vpravo < 0 :  
+self.kill()sebe . zabít ()
