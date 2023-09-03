@@ -1,0 +1,160 @@
+"""
+Simple RPG Game
+
+This program is a simple text-based RPG game where the player can explore different rooms, encounter enemies, and collect items.
+
+"""
+
+import random
+import logging
+
+# Setting up logging to monitor performance and errors
+logging.basicConfig(level=logging.INFO)
+
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.health = 100
+        self.attack_power = 10
+        self.defense_power = 5
+        self.inventory = []
+
+    def attack(self, enemy):
+        """
+        Attack an enemy.
+
+        Args:
+        enemy (Enemy): The enemy to attack.
+
+        Returns:
+        bool: True if the attack is successful, False otherwise.
+        """
+        logging.info(f"{self.name} is attacking {enemy.name}...")
+        damage = self.attack_power - enemy.defense_power
+        if damage > 0:
+            enemy.health -= damage
+            logging.info(f"{enemy.name} took {damage} damage.")
+            return True
+        else:
+            logging.info(f"{enemy.name} blocked the attack.")
+            return False
+
+    def use_item(self, item):
+        """
+        Use an item from the inventory.
+
+        Args:
+        item (str): The name of the item to use.
+
+        Returns:
+        bool: True if the item is used successfully, False otherwise.
+        """
+        logging.info(f"{self.name} is using {item}...")
+        if item in self.inventory:
+            self.inventory.remove(item)
+            logging.info(f"{self.name} used {item}.")
+            return True
+        else:
+            logging.info(f"{self.name} does not have {item}.")
+            return False
+
+    def collect_item(self, item):
+        """
+        Collect an item.
+
+        Args:
+        item (str): The name of the item to collect.
+        """
+        logging.info(f"{self.name} collected {item}.")
+        self.inventory.append(item)
+
+
+class Enemy:
+    def __init__(self, name, health, attack_power, defense_power):
+        self.name = name
+        self.health = health
+        self.attack_power = attack_power
+        self.defense_power = defense_power
+
+    def attack(self, player):
+        """
+        Attack the player.
+
+        Args:
+        player (Player): The player to attack.
+
+        Returns:
+        bool: True if the attack is successful, False otherwise.
+        """
+        logging.info(f"{self.name} is attacking {player.name}...")
+        damage = self.attack_power - player.defense_power
+        if damage > 0:
+            player.health -= damage
+            logging.info(f"{player.name} took {damage} damage.")
+            return True
+        else:
+            logging.info(f"{player.name} blocked the attack.")
+            return False
+
+
+def play_game():
+    """
+    Play the RPG game.
+    """
+    logging.info("Starting the RPG game...")
+    player_name = input("Enter your name: ")
+    player = Player(player_name)
+
+    enemies = [
+        Enemy("Goblin", 50, 8, 3),
+        Enemy("Orc", 80, 12, 5),
+        Enemy("Dragon", 200, 20, 10)
+    ]
+
+    while True:
+        print("\n---")
+        print("Options:")
+        print("1. Explore room")
+        print("2. Attack enemy")
+        print("3. Use item")
+        print("4. Quit")
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            logging.info(f"{player.name} is exploring the room...")
+            print("You found a treasure chest!")
+            item = random.choice(["Health Potion", "Attack Boost", "Defense Boost"])
+            player.collect_item(item)
+            logging.info(f"{player.name} collected {item}.")
+
+        elif choice == "2":
+            logging.info(f"{player.name} is attacking an enemy...")
+            enemy = random.choice(enemies)
+            if player.attack(enemy):
+                if enemy.health <= 0:
+                    logging.info(f"{enemy.name} defeated!")
+                    enemies.remove(enemy)
+            else:
+                logging.info(f"{enemy.name} blocked the attack.")
+
+        elif choice == "3":
+            logging.info(f"{player.name} is using an item...")
+            item = input("Enter the name of the item to use: ")
+            player.use_item(item)
+
+        elif choice == "4":
+            logging.info(f"{player.name} quit the game.")
+            break
+
+        else:
+            logging.info("Invalid choice. Please try again.")
+
+        if player.health <= 0:
+            logging.info(f"{player.name} is defeated!")
+            break
+
+    logging.info("Game over.")
+
+
+if __name__ == "__main__":
+    play_game()
