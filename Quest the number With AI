@@ -1,0 +1,27 @@
+
+
+```python
+import random
+
+secret_num = random.randint(1, 100) 
+
+num_guesses = 0
+max_guesses = 7
+
+while num_guesses < max_guesses:
+    guess = int(input('What is your guess? '))
+    num_guesses += 1
+    
+    if guess == secret_num:
+        print('You guessed the number in', num_guesses, 'tries!')
+        break
+    elif guess < secret_num:
+        print('Too low, try again.')
+    else:
+        print('Too high, try again.')
+        
+if num_guesses == max_guesses:
+    print('You did not guess the number in 7 tries. The number was', secret_num)
+
+print('Game over!')
+```
