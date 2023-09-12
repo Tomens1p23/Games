@@ -1,0 +1,28 @@
+def question_game():
+    """
+    Simple question game where the user is asked a series of questions and has to answer them correctly.
+
+    Returns:
+    - None
+    """
+    questions = {
+        "What is the capital of France?": "Paris",
+        "What is the largest planet in our solar system?": "Jupiter",
+        "What is the chemical symbol for gold?": "Au",
+        "What is the tallest mountain in the world?": "Mount Everest"
+    }
+
+    score = 0
+
+    for question, answer in questions.items():
+        user_answer = input(question + " ")
+        if user_answer.lower() == answer.lower():
+            print("Correct!")
+            score += 1
+        else:
+            print("Incorrect!")
+
+    print(f"Your final score is: {score}/{len(questions)}")
+
+if __name__ == "__main__":
+    question_game()
