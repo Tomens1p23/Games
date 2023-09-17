@@ -1,0 +1,119 @@
+import random
+
+class Card:
+    """
+    Class to represent a playing card.
+
+    Attributes:
+    - rank: str
+        The rank of the card, e.g., 'Ace', '2', '3', ..., 'King'.
+    - suit: str
+        The suit of the card, e.g., 'Hearts', 'Diamonds', 'Clubs', 'Spades'.
+    """
+
+    def __init__(self, rank: str, suit: str):
+        """
+        Constructor to instantiate the Card class.
+
+        Parameters:
+        - rank: str
+            The rank of the card.
+        - suit: str
+            The suit of the card.
+        """
+
+        self.rank = rank
+        self.suit = suit
+
+    def __str__(self):
+        """
+        Returns a string representation of the card.
+
+        Returns:
+        - str:
+            The string representation of the card.
+        """
+
+        return f"{self.rank} of {self.suit}"
+
+
+class Deck:
+    """
+    Class to represent a deck of playing cards.
+
+    Attributes:
+    - cards: list
+        A list of Card objects representing the deck of cards.
+    """
+
+    def __init__(self):
+        """
+        Constructor to instantiate the Deck class.
+        """
+
+        self.cards = []
+
+        # Creating a deck of cards with all possible combinations of ranks and suits
+        ranks = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King']
+        suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
+
+        for suit in suits:
+            for rank in ranks:
+                card = Card(rank, suit)
+                self.cards.append(card)
+
+    def shuffle(self):
+        """
+        Shuffles the deck of cards.
+        """
+
+        random.shuffle(self.cards)
+
+    def deal_card(self):
+        """
+        Deals a card from the deck.
+
+        Returns:
+        - Card:
+            The card that was dealt.
+        """
+
+        if len(self.cards) == 0:
+            raise ValueError("No more cards in the deck.")
+
+        return self.cards.pop()
+
+
+def play_game():
+    """
+    Function to play a simple card game.
+
+    Rules:
+    - Two players are involved.
+    - Each player is dealt a card from a shuffled deck.
+    - The player with the higher ranked card wins.
+    """
+
+    # Create a deck of cards and shuffle it
+    deck = Deck()
+    deck.shuffle()
+
+    # Deal a card to each player
+    player1_card = deck.deal_card()
+    player2_card = deck.deal_card()
+
+    # Print the cards dealt to each player
+    print(f"Player 1: {player1_card}")
+    print(f"Player 2: {player2_card}")
+
+    # Determine the winner based on the ranks of the cards
+    if player1_card.rank > player2_card.rank:
+        print("Player 1 wins!")
+    elif player1_card.rank < player2_card.rank:
+        print("Player 2 wins!")
+    else:
+        print("It's a tie!")
+
+
+# Play the game
+play_game()
