@@ -1,0 +1,124 @@
+import pygame
+import random
+
+# Initialize the game
+pygame.init()
+
+# Set up the game window
+window_width = 500
+window_height = 800
+window = pygame.display.set_mode((window_width, window_height))
+pygame.display.set_caption("Flappy Bird")
+
+# Set up the colors
+white = (255, 255, 255)
+black = (0, 0, 0)
+
+# Set up the bird
+bird_width = 50
+bird_height = 50
+bird_x = window_width // 2 - bird_width // 2
+bird_y = window_height // 2 - bird_height // 2
+bird_y_change = 0
+bird_gravity = 0.5
+
+# Set up the pipes
+pipe_width = 100
+pipe_height = random.randint(100, 400)
+pipe_x = window_width
+pipe_y = random.randint(0, window_height - pipe_height)
+pipe_speed = 5
+
+# Set up the score
+score = 0
+font = pygame.font.Font(None, 36)
+
+def draw_bird(x, y):
+    """
+    Function to draw the bird on the game window.
+
+    Parameters:
+    - x: int
+        The x-coordinate of the bird.
+    - y: int
+        The y-coordinate of the bird.
+    """
+    pygame.draw.rect(window, black, (x, y, bird_width, bird_height))
+
+def draw_pipe(x, y, height):
+    """
+    Function to draw the pipe on the game window.
+
+    Parameters:
+    - x: int
+        The x-coordinate of the pipe.
+    - y: int
+        The y-coordinate of the pipe.
+    - height: int
+        The height of the pipe.
+    """
+    pygame.draw.rect(window, black, (x, y, pipe_width, height))
+    pygame.draw.rect(window, black, (x, y + height + 200, pipe_width, window_height - height - 200))
+
+def display_score(score):
+    """
+    Function to display the score on the game window.
+
+    Parameters:
+    - score: int
+        The current score.
+    """
+    text = font.render("Score: " + str(score), True, black)
+    window.blit(text, (10, 10))
+
+# Main game loop
+running = True
+while running:
+    # Handle events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                bird_y_change = -10
+
+    # Update bird position
+    bird_y_change += bird_gravity
+    bird_y += bird_y_change
+
+    # Update pipe position
+    pipe_x -= pipe_speed
+
+    # Check for collision with pipe
+    if bird_x + bird_width > pipe_x and bird_x < pipe_x + pipe_width:
+        if bird_y < pipe_y or bird_y + bird_height > pipe_y + pipe_height:
+            running = False
+
+    # Check for collision with window boundaries
+    if bird_y < 0 or bird_y + bird_height > window_height:
+        running = False
+
+    # Check if pipe has passed the bird
+    if pipe_x + pipe_width < bird_x:
+        score += 1
+        pipe_x = window_width
+        pipe_height = random.randint(100, 400)
+        pipe_y = random.randint(0, window_height - pipe_height)
+
+    # Clear the window
+    window.fill(white)
+
+    # Draw the bird
+    draw_bird(bird_x, bird_y)
+
+    # Draw the pipe
+    draw_pipe(pipe_x, pipe_y, pipe_height)
+
+    # Display the score
+    display_score(score)
+
+    # Update the display
+    pygame.display.update()
+
+# Quit the game
+pygame.quit()
