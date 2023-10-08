@@ -1,0 +1,123 @@
+import <link category="ORGANISATIONS">pygame</link>
+import <link category="CULTURE">time</link>
+
+<link category="ORGANISATIONS">pygame</link>.init()
+
+white = (255, 255, 255)
+black = (0, 0, 0)
+red = (255, 0, 0)
+
+dis_width = 800
+dis_height = 600
+
+dis = <link category="ORGANISATIONS">pygame</link>.display.set_mode((dis_width, dis_height))
+<link category="ORGANISATIONS">pygame</link>.display.set_caption('Snake Game')
+
+game_over = False
+
+x1 = dis_width / 2
+y1 = dis_height / 2
+
+snake_block = 10
+
+x1_change = 0
+y1_change = 0
+
+clock = <link category="ORGANISATIONS">pygame</link>.time.Clock()
+snake_speed = 30
+
+font_style = <link category="ORGANISATIONS">pygame</link>.font.SysFont(None, 50)
+score_font = <link category="ORGANISATIONS">pygame</link>.font.SysFont(None, 35)
+
+
+def our_snake(snake_block, snake_list):
+    for x in snake_list:
+        <link category="ORGANISATIONS">pygame</link>.draw.rect(dis, black, [x[0], x[1], snake_block, snake_block])
+
+
+def message(msg, color):
+    mesg = font_style.render(msg, True, color)
+    dis.blit(mesg, [dis_width / 6, dis_height / 3])
+
+
+def game_loop():
+    game_over = False
+    game_close = False
+
+    x1 = dis_width / 2
+    y1 = dis_height / 2
+
+    x1_change = 0
+    y1_change = 0
+
+    snake_list = []
+    length_of_snake = 1
+
+    foodx = round((round(dis_width / 10) * 10) / 10)
+    foody = round((round(dis_height / 10) * 10) / 10)
+
+    while not game_over:
+
+        while game_close:
+            dis.fill(white)
+            message("Prohra! Stiskněte Q-Quit nebo C-Znovu", red)
+            <link category="ORGANISATIONS">pygame</link>.display.update()
+
+            for event in <link category="ORGANISATIONS">pygame</link>.event.get():
+                if event.type == <link category="ORGANISATIONS">pygame</link>.KEYDOWN:
+                    if event.key == <link category="ORGANISATIONS">pygame</link>.K_q:
+                        game_over = True
+                        game_close = False
+                    if event.key == <link category="ORGANISATIONS">pygame</link>.K_c:
+                        game_loop()
+
+        for event in <link category="ORGANISATIONS">pygame</link>.event.get():
+            if event.type == <link category="ORGANISATIONS">pygame</link>.QUIT:
+                game_over = True
+            if event.type == <link category="ORGANISATIONS">pygame</link>.KEYDOWN:
+                if event.key == <link category="ORGANISATIONS">pygame</link>.K_LEFT:
+                    x1_change = -snake_block
+                    y1_change = 0
+                elif event.key == <link category="ORGANISATIONS">pygame</link>.K_RIGHT:
+                    x1_change = snake_block
+                    y1_change = 0
+                elif event.key == <link category="ORGANISATIONS">pygame</link>.K_UP:
+                    y1_change = -snake_block
+                    x1_change = 0
+                elif event.key == <link category="ORGANISATIONS">pygame</link>.K_DOWN:
+                    y1_change = snake_block
+                    x1_change = 0
+
+        if x1 >= dis_width or x1 < 0 or y1 >= dis_height or y1 < 0:
+            game_close = True
+        x1 += x1_change
+        y1 += y1_change
+        dis.fill(white)
+        <link category="ORGANISATIONS">pygame</link>.draw.rect(dis, red, [foodx, foody, snake_block, snake_block])
+        snake_head = []
+        snake_head.append(x1)
+        snake_head.append(y1)
+        snake_list.append(snake_head)
+        if len(snake_list) > length_of_snake:
+            del snake_list[0]
+
+        for x in snake_list[:-1]:
+            if x == snake_head:
+                game_close = True
+
+        our_snake(snake_block, snake_list)
+
+        <link category="ORGANISATIONS">pygame</link>.display.update()
+
+        if x1 == foodx and y1 == foody:
+            foodx = round((round(dis_width / 10) * 10) / 10)
+            foody = round((round(dis_height / 10) * 10) / 10)
+            length_of_snake += 1
+
+        clock.tick(snake_speed)
+
+    <link category="ORGANISATIONS">pygame</link>.quit()
+    quit()
+
+
+game_loop()
