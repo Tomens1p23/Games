@@ -1,0 +1,200 @@
+import random
+
+class QuestionGame:
+    """
+    Class to handle a question game with multiple choice questions.
+
+    Attributes:
+    - questions: list
+        List of questions in the game.
+    - choices: list
+        List of choices for each question.
+    """
+
+    def __init__(self, questions: list, choices: list):
+        """
+        Constructor to instantiate the QuestionGame class.
+
+        Parameters:
+        - questions: list
+            List of questions in the game.
+        - choices: list
+            List of choices for each question.
+
+        Raises:
+        - ValueError:
+            Throws an error if the number of questions and choices do not match.
+        """
+
+        # Verifying that the number of questions and choices match.
+        if len(questions) != len(choices):
+            raise ValueError("Number of questions and choices should match.")
+
+        # Assigning the questions and choices to the instance variables.
+        self.questions = questions
+        self.choices = choices
+
+    def play_game(self):
+        """
+        Plays the question game.
+
+        Returns:
+        - int:
+            The total score achieved by the player.
+        """
+
+        score = 0
+
+        # Looping through each question and its choices.
+        for i in range(len(self.questions)):
+            question = self.questions[i]
+            choices = self.choices[i]
+
+            # Displaying the question and choices.
+            print(f"Question {i+1}: {question}")
+            for j in range(len(choices)):
+                print(f"{chr(97+j)}) {choices[j]}")
+
+            # Getting the user's answer.
+            answer = input("Your answer (a, b, or c): ")
+
+            # Checking if the answer is correct.
+            if answer.lower() == "a" or answer.lower() == "b" or answer.lower() == "c":
+                if answer.lower() == "a":
+                    user_choice = 0
+                elif answer.lower() == "b":
+                    user_choice = 1
+                else:
+                    user_choice = 2
+
+                correct_choice = random.randint(0, 2)
+
+                if user_choice == correct_choice:
+                    print("Correct!")
+                    score += 1
+                else:
+                    print("Incorrect!")
+            else:
+                print("Invalid choice!")
+
+            print()
+
+        return score
+
+# Unit tests for QuestionGame class.
+
+import unittest
+
+class TestQuestionGame(unittest.TestCase):
+
+    # Setup method to instantiate the object before each test.
+    def setUp(self):
+        self.questions = [
+            "What is the capital of France?",
+            "What is the largest planet in our solar system?",
+            "Who painted the Mona Lisa?"
+        ]
+        self.choices = [
+            ["a) Paris", "b) London", "c) Rome"],
+            ["a) Jupiter", "b) Saturn", "c) Mars"],
+            ["a) Leonardo da Vinci", "b) Pablo Picasso", "c) Vincent van Gogh"]
+        ]
+        self.game = QuestionGame(self.questions, self.choices)
+
+    # Tests for __init__
+    def test_valid_questions_and_choices(self):
+        """
+        Tests if questions and choices are correctly set during initialization.
+        """
+        self.assertEqual(self.game.questions, self.questions)
+        self.assertEqual(self.game.choices, self.choices)
+
+    def test_mismatched_questions_and_choices(self):
+        """
+        Tests if ValueError is raised when the number of questions and choices do not match.
+        """
+        with self.assertRaises(ValueError):
+            QuestionGame(self.questions, self.choices[:-1])
+
+    # Tests for play_game
+    def test_play_game_with_correct_answers(self):
+        """
+        Tests the game with all correct answers.
+        """
+        # Mocking the input function to simulate user input.
+        def mock_input(prompt):
+            return "a"
+
+        # Setting the mock input function.
+        original_input = __builtins__.input
+        __builtins__.input = mock_input
+
+        # Playing the game and checking the score.
+        score = self.game.play_game()
+        self.assertEqual(score, 3)
+
+        # Restoring the original input function.
+        __builtins__.input = original_input
+
+    def test_play_game_with_incorrect_answers(self):
+        """
+        Tests the game with all incorrect answers.
+        """
+        # Mocking the input function to simulate user input.
+        def mock_input(prompt):
+            return "b"
+
+        # Setting the mock input function.
+        original_input = __builtins__.input
+        __builtins__.input = mock_input
+
+        # Playing the game and checking the score.
+        score = self.game.play_game()
+        self.assertEqual(score, 0)
+
+        # Restoring the original input function.
+        __builtins__.input = original_input
+
+    def test_play_game_with_invalid_answers(self):
+        """
+        Tests the game with invalid answers.
+        """
+        # Mocking the input function to simulate user input.
+        def mock_input(prompt):
+            return "d"
+
+        # Setting the mock input function.
+        original_input = __builtins__.input
+        __builtins__.input = mock_input
+
+        # Playing the game and checking the score.
+        score = self.game.play_game()
+        self.assertEqual(score, 0)
+
+        # Restoring the original input function.
+        __builtins__.input = original_input
+
+# Example of using the QuestionGame class:
+
+# Example: Playing the game
+questions = [
+    "What is the capital of France?",
+    "What is the largest planet in our solar system?",
+    "Who painted the Mona Lisa?"
+]
+choices = [
+    ["a) Paris", "b) London", "c) Rome"],
+    ["a) Jupiter", "b) Saturn", "c) Mars"],
+    ["a) Leonardo da Vinci", "b) Pablo Picasso", "c) Vincent van Gogh"]
+]
+game = QuestionGame(questions, choices)
+score = game.play_game()
+print(f"Your score: {score}/{len(questions)}")
+
+# Example: Initializing with mismatched questions and choices (should raise an error)
+try:
+    game2 = QuestionGame(questions, choices[:-1])
+    score2 = game2.play_game()
+    print(f"Your score: {score2}/{len(questions)}")
+except ValueError as e:
+    print(f"Error while initializing game: {e}")
