@@ -1,0 +1,181 @@
+import random
+
+class ChessGame:
+    """
+    Class to handle a 3D chess game where the player can play against an AI opponent.
+
+    Attributes:
+    - board: list
+        A 3D list representing the chess board.
+    - current_player: str
+        The current player, either 'Player' or 'AI'.
+    """
+
+    def __init__(self):
+        """
+        Constructor to instantiate the ChessGame class.
+
+        Initializes the chess board and sets the current player to 'Player'.
+        """
+
+        # Initializing the chess board as a 3D list with empty spaces.
+        self.board = [[[' ' for _ in range(8)] for _ in range(8)] for _ in range(8)]
+
+        # Setting the current player to 'Player'.
+        self.current_player = 'Player'
+
+    def print_board(self):
+        """
+        Prints the current state of the chess board.
+        """
+
+        print("Current Board:")
+        for i in range(8):
+            print(f"Layer {i+1}:")
+            for j in range(8):
+                print(' '.join(self.board[i][j]))
+            print()
+
+    def make_move(self, layer: int, row: int, col: int):
+        """
+        Makes a move on the chess board.
+
+        Parameters:
+        - layer: int
+            The layer on which the move is to be made.
+        - row: int
+            The row on which the move is to be made.
+        - col: int
+            The column on which the move is to be made.
+
+        Returns:
+        - bool:
+            True if the move is valid and made successfully, False otherwise.
+        """
+
+        # Checking if the move is within the board boundaries.
+        if layer < 0 or layer >= 8 or row < 0 or row >= 8 or col < 0 or col >= 8:
+            return False
+
+        # Checking if the selected position is empty.
+        if self.board[layer][row][col] != ' ':
+            return False
+
+        # Making the move by placing the player's piece on the selected position.
+        self.board[layer][row][col] = 'P'
+
+        return True
+
+    def ai_make_move(self):
+        """
+        Makes a move for the AI opponent.
+
+        Returns:
+        - bool:
+            True if a valid move is made, False if no valid move is available.
+        """
+
+        # Checking if there are any empty positions on the board.
+        empty_positions = []
+        for i in range(8):
+            for j in range(8):
+                for k in range(8):
+                    if self.board[i][j][k] == ' ':
+                        empty_positions.append((i, j, k))
+
+        # If no empty positions are available, return False.
+        if len(empty_positions) == 0:
+            return False
+
+        # Selecting a random empty position and making the move for the AI.
+        layer, row, col = random.choice(empty_positions)
+        self.board[layer][row][col] = 'AI'
+
+        return True
+
+# Unit tests for ChessGame class.
+
+import unittest
+
+class TestChessGame(unittest.TestCase):
+
+    # Setup method to instantiate the object before each test.
+    def setUp(self):
+        self.game = ChessGame()
+
+    # Tests for __init__
+    def test_initial_board_state(self):
+        """
+        Tests if the chess board is initialized with empty spaces.
+        """
+        for i in range(8):
+            for j in range(8):
+                for k in range(8):
+                    self.assertEqual(self.game.board[i][j][k], ' ')
+
+    def test_initial_current_player(self):
+        """
+        Tests if the current player is set to 'Player' initially.
+        """
+        self.assertEqual(self.game.current_player, 'Player')
+
+    # Tests for make_move
+    def test_valid_move(self):
+        """
+        Tests if a valid move is made successfully.
+        """
+        self.assertTrue(self.game.make_move(0, 0, 0))
+        self.assertEqual(self.game.board[0][0][0], 'P')
+
+    def test_invalid_move_out_of_boundaries(self):
+        """
+        Tests if an invalid move outside the board boundaries is rejected.
+        """
+        self.assertFalse(self.game.make_move(8, 0, 0))
+        self.assertFalse(self.game.make_move(0, 8, 0))
+        self.assertFalse(self.game.make_move(0, 0, 8))
+
+    def test_invalid_move_occupied_position(self):
+        """
+        Tests if an invalid move to an occupied position is rejected.
+        """
+        self.game.make_move(0, 0, 0)
+        self.assertFalse(self.game.make_move(0, 0, 0))
+
+    # Tests for ai_make_move
+    def test_ai_make_move_valid(self):
+        """
+        Tests if the AI makes a valid move successfully.
+        """
+        self.assertTrue(self.game.ai_make_move())
+        self.assertEqual(self.game.board[0][0][0], 'AI')
+
+    def test_ai_make_move_no_valid_moves(self):
+        """
+        Tests if the AI returns False when there are no valid moves available.
+        """
+        # Filling the entire board with pieces.
+        for i in range(8):
+            for j in range(8):
+                for k in range(8):
+                    self.game.board[i][j][k] = 'P'
+
+        self.assertFalse(self.game.ai_make_move())
+
+# Example of using the ChessGame class:
+
+# Initializing the game
+game = ChessGame()
+
+# Making moves and printing the board
+game.make_move(0, 0, 0)
+game.make_move(1, 1, 1)
+game.make_move(2, 2, 2)
+game.print_board()
+
+# AI makes a move
+game.ai_make_move()
+game.print_board()
+
+# Running the unit tests
+unittest.main()
