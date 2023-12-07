@@ -1,0 +1,86 @@
+import sys
+
+def main():
+    current_room = "start"
+
+    while True:
+        print("You are in the " + current_room + " room.")
+
+        if current_room == "start":
+            action = get_user_input("[A]dd room to the north\n[B]egin adventure\n[Q]uit")
+
+            if action == "A":
+                new_room_name = get_user_input("What is the name of the new room?\n")
+                add_room(new_room_name, "north")
+            elif action == "B":
+                current_room = move_to_next_room("start")
+            elif action == "Q":
+                sys.exit()
+        elif current_room == "end":
+            action = get_user_input("You have reached the end of the adventure. Would you like to play again?\n[Y]es\n[N]o")
+
+            if action == "Y":
+                current_room = "start"
+            else:
+                sys.exit()
+        else:
+            action = get_user_input("What do you want to do?\n[L]ook around\n[E]xamine\n[W]alk\n[Q]uit")
+
+            if action == "L":
+                print_room_description(current_room)
+            elif action == "E":
+                examine_room(current_room)
+            elif action == "W":
+                next_room = move_to_next_room(current_room)
+
+                if next_room is None:
+                    print("You can't go that way.")
+                else:
+                    current_room = next_room
+
+def get_user_input(prompt):
+    user_input = input(prompt + "> ")
+    return user_input.strip().lower()
+
+def add_room(room_name, direction):
+    if room_name in rooms:
+        print("Error: room already exists.")
+        return
+
+    rooms[room_name] = {
+        "directions": {
+            direction: None
+        }
+    }
+
+def print_room_description(room_name):
+    if room_name not in rooms:
+        print("Error: room does not exist.")
+        return
+
+    print("You are in the " + room_name + " room.")
+    print(rooms[room_name]["description"])
+
+def examine_room(room_name):
+    if room_name not in rooms:
+        print("Error: room does not exist.")
+        return
+
+    print("You examine the room and find:")
+    for item in rooms[room_name]["items"]:
+        print(item)
+
+def move_to_next_room(current_room):
+    if current_room not in rooms:
+        print("Error: room does not exist.")
+        return None
+
+    for direction, next_room in rooms[current_room]["directions"].items():
+        if next_room is not None:
+            print("You walk " + direction + " and enter the " + next_room + " room.")
+            return next_room
+
+    return None
+
+if __name__ == "__main__":
+    main()
